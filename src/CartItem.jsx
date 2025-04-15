@@ -9,27 +9,42 @@ const CartItem = ({ onContinueShopping }) => {
 
   // Calculate total amount for all products in the cart
   const calculateTotalAmount = () => {
- 
+    let total = 0;
+    cart.forEach(item => {
+      const quantity = item.quantity || 1; // Default to 1 if quantity is not defined
+      const cost = parseFloat(item.cost.substring(1)); // Convert cost string to number
+      total += quantity * cost;
+    });
+    return total.toFixed(2); // Return total as a string with 2 decimal places
   };
 
   const handleContinueShopping = (e) => {
-   
+    onContinueShopping(e); // Call the parent function to continue shopping
   };
 
+const handleIncrement = (item) => {
+	dispatch(updateQuantity({ name: item.name, quantity: item.quantity + 1 }));
+};
 
-
-  const handleIncrement = (item) => {
-  };
-
-  const handleDecrement = (item) => {
-   
-  };
+const handleDecrement = (item) => {
+  if (item.quantity <= 1) {
+    alert("Minimum quantity is 1. Please remove the item if you want to delete it.");
+    return;
+  }
+	dispatch(updateQuantity({ name: item.name, quantity: item.quantity - 1 }));
+};
 
   const handleRemove = (item) => {
+    dispatch(removeItem(item.name)); // Remove item from cart using its name
   };
 
   // Calculate total cost based on quantity for an item
   const calculateTotalCost = (item) => {
+
+    const quantity = item.quantity || 1; // Default to 1 if quantity is not defined
+    const cost = parseFloat(item.cost.substring(1)); // Convert cost string to number
+    const totalCost = quantity * cost; // Calculate total cost
+    return totalCost.toFixed(2); // Return total cost as a string with 2 decimal places
   };
 
   return (
@@ -57,7 +72,7 @@ const CartItem = ({ onContinueShopping }) => {
       <div className="continue_shopping_btn">
         <button className="get-started-button" onClick={(e) => handleContinueShopping(e)}>Continue Shopping</button>
         <br />
-        <button className="get-started-button1">Checkout</button>
+        <button className="get-started-button1" onClick={() => alert("Checkout functionality to be implemented")}>Checkout</button>
       </div>
     </div>
   );
